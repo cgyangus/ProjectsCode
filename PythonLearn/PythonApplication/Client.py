@@ -47,6 +47,7 @@ while threadCount>0:
     threadCount-=1
 #取得开奖公告
 GetPrizeInfo(termCode)
+print("所有任务已经完成")
 
     
 

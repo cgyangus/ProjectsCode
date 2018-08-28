@@ -17,7 +17,7 @@ def GetRequestXml(headTup,body,pwd):
     keyMd5=hashlib.md5(keyStr.encode(encoding='utf-8'))
     key=keyMd5.hexdigest()
     msgHead='<head><command>'+headTup[0]+'</command><agentid>'+headTup[1]+'</agentid><messageid>'+headTup[2]+'</messageid><timestamp>'+headTup[3]+'</timestamp><key>'+key+'</key></head>'
-    requestXml='msg=<?xml version=\'1.0\' encoding=\'UTF-8\'?><message>'+msgHead+body+'</message>'
+    requestXml='<?xml version=\'1.0\' encoding=\'UTF-8\'?><message>'+msgHead+body+'</message>'
     return requestXml
 
 def HpptPost(reqUrl,reqData):

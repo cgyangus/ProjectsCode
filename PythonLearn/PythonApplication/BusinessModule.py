@@ -7,7 +7,7 @@ ttUrl='http://10.44.16.85:8090/?Handler=TTHandler'
 #ttUrl='http://127.0.0.1:8897?Handler=TTHandler'
 agentInfo=('1001','123456')
 global messageId
-messageId=1
+messageId=int(time.time())
 
 
 #取新期参数
@@ -86,14 +86,27 @@ def GetBetNoticeBody(body):
     newBody=""
     try:
         bodyXml=xml.dom.minidom.parseString(body)
-        lotType=bodyXml.getElementsByTagName("lottype")[0].childNodes[0].data
+        lotType=bodyXml.getElementsByTagName("lottype")[0].childNodes[0].data        
         termCode=bodyXml.getElementsByTagName("periodical")[0].childNodes[0].data
-        status=bodyXml.getElementsByTagName("status")[0].childNodes[0].data
-
+        status='200'
         newBody="<body><return><code>0</code><message>成功</message></return><lottype>"+lotType+"</lottype><periodical>"+termCode+"</periodical><status>200</status></body>"
     except:
         print("通知结果有误"+body)
     return newBody
+
+#票面信息通知回复
+def GetTicketInfoNoticeBody(body):
+    _newBody=""
+    try:
+        bodyXml=xml.dom.minidom.parseString(body)
+        lotType=bodyXml.getElementsByTagName("lottype")[0].childNodes[0].data        
+        status='200'
+
+        _newBody="<body><return><code>0</code><message>成功</message></return><lottype>"+lotType+"</lottype><status>200</status></body>"
+    except:
+        print("通知结果有误"+body)
+    return _newBody
+
 
 
 #接收处理投回调通知
@@ -103,7 +116,15 @@ def NoticeDeal(reqCon):
     reqDetail=CommonFun.ResolveReqContent(reqCon)
     head=reqDetail[0]
     body=reqDetail[1]
-    body=GetBetNoticeBody(body)
+
+    #判断通知类型
+    cmd=head[0]
+    if (cmd=='2101'):
+        body=GetBetNoticeBody(body)  
+    elif(cmd=='3002'):
+        body=GetTicketInfoNoticeBody(body)
+    else:
+        pass
     resCon=CommonFun.GetRequestXml(head,body,agentInfo[1])
     return resCon
 

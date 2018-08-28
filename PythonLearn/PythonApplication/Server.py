@@ -25,18 +25,23 @@ class ttHandler(BaseHTTPRequestHandler):
             reqLen=int(self.headers['content-length'])
             requestContent=self.rfile.read(reqLen)
             requestStr=str(requestContent,'utf-8')
+            print("收到通知请求"+requestStr)
             #判断是否存在msg=标识，有替换
             requestStr=requestStr.replace('msg=','')
             #调用解析方法形成回复内容
             responseStr=BusinessModule.NoticeDeal(requestStr)
+          
             resCon=responseStr.encode()
             resLen=len(resCon)            
             self.send_response(resLen)
             self.send_header('Content-type','text/html')
             self.end_headers()
             self.wfile.write(resCon)
-        except IOError:
+        except  Exception as ex:
             self.send_error(404,"File Not Found")
+            print(ex)
+        
+        print("回复请求"+responseStr)
         return
         
 

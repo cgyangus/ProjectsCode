@@ -5,6 +5,7 @@ import time
 import sys
 import _thread
 
+
   #取双色玩法参数
 termList=BusinessModule.GetTermList('301')
 
@@ -18,10 +19,9 @@ print("游戏"+lotType+"期号"+termCode+"可以销售")
 def SellTest(threadId,sellCount,termCode): 
     try:
         #双色球销售
-        while sellCount > 0 :
-            print("线程"+str(threadId)+"销售序号为"+str(sellCount)+"2元双色一张")
-            a=time.time()
-            ticketsn=time.strftime("%Y%m%d%H%M%S", time.localtime())+str(int(time.time()))
+        while sellCount > 0 :    
+            print("线程"+str(threadId)+"销售序号为"+str(sellCount)+"2元双色一张")         
+            ticketsn=time.strftime("%Y%m%d%H%M%S", time.localtime())+str(int(time.time()))+str(threadId)+str(sellCount)
             dataList="<dataitem ticketsn =\"" + ticketsn + "\" playtype=\"30101\" code=\"01,02,03,04,05,06|07\" zhushu=\"1\" money=\"2.00\" multiple=\"1\" expand=\"\" /> "
             betResult=BusinessModule.LotBet(lotType,termCode,"2","1",dataList)
             #解析投注结果
@@ -41,13 +41,16 @@ def GetPrizeInfo(termCode):
     prizeInfo=BusinessModule.GetPrizeInfo('301',prizeTermCode)
     print(prizeInfo)      
 #SellTest(1,1,termCode)
-threadCount=1
+
+
+threadCount=10
 while threadCount>0:
-    _thread.start_new_thread(SellTest,(threadCount,1,termCode,))
+    _thread.start_new_thread(SellTest,(threadCount,10,termCode,))
     threadCount-=1
+
+    
 #取得开奖公告
 GetPrizeInfo(termCode)
-print("所有任务已经完成")
 
     
 
